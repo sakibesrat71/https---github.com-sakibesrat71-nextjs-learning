@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // Use contact route
-app.use('/api', contactRoutes);
+app.use('/api/contact', contactRoutes);
 
 const PORT = process.env.PORT || 5000;
 

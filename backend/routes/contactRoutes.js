@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const router = express.Router();
 
 // Route to send email
-router.post('/contact', async (req, res) => {
+router.post('/mail', async (req, res) => {
   const { name, email, subject, message } = req.body;
 
   if (!name || !email || !subject || !message) {
@@ -24,7 +24,7 @@ router.post('/contact', async (req, res) => {
   // Define email options
   let mailOptions = {
     from: email,
-    to: process.env.SMTP_USER,
+    to: process.env.MYSELF,
     subject: subject,
     text: `You have a new message from:
     Name: ${name}
@@ -32,9 +32,22 @@ router.post('/contact', async (req, res) => {
     Message: ${message}`
   };
 
+  let replymailOptions = {
+    from: process.env.MYSELF,
+    to: email,
+    subject: "Thank you for contacting me",
+    text: `Your message of interest:
+    Name: ${name}
+    Email: ${email}
+    Message: ${message}
+    has been sent to me successfully. I will get back to you as soon as possible with my personal mail.`
+
+  };
+
   try {
     // Send email
     await transporter.sendMail(mailOptions);
+    await transporter.sendMail(replymailOptions);
     res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error sending email', error });
