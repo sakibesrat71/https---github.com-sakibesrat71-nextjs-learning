@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ContactCode from '../components/ContactCode';
 import styles from '../styles/ContactPage.module.css';
+import axios from 'axios';
 
 const ContactPage = () => {
   const [name, setName] = useState('');
@@ -10,19 +11,28 @@ const ContactPage = () => {
 
   const submitForm = async (e) => {
     e.preventDefault();
-    console.log(process.env.NEXT_PUBLIC_API_URL);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contact`, {
-      method: 'POST',
-      body: JSON.stringify({ name, email, subject, message }),
-    });
-    if (res.ok) {
-      alert('Your response has been received!');
-      setName('');
-      setEmail('');
-      setSubject('');
-      setMessage('');
-    } else {
+    
+    try {
+      // Send a POST request to the backend using Axios
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/contact/mail`, {
+        name,    // these values will be taken from your form's state
+        email,
+        subject,
+        message,
+      });
+  
+      // If the request is successful
+      if (res.status === 200) {
+        alert('Your response has been received!');
+        setName('');
+        setEmail('');
+        setSubject('');
+        setMessage('');
+      }
+    } catch (error) {
+      // Handle error
       alert('There was an error. Please try again in a while.');
+      console.error(error);
     }
   };
 
