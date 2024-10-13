@@ -4,8 +4,14 @@ const router = express.Router();
 
 // Route to send email
 router.post('/mail', async (req, res) => {
-  const { name, email, subject, message } = req.body;
+  const { name, email, subject, message, honey } = req.body;
 
+  // Honeypot check: If 'honey' field is filled, it's likely a bot
+  if (honey) {
+    return res.status(400).json({ message: 'Bot detected, email not sent' });
+  }
+
+  // Check for missing fields
   if (!name || !email || !subject || !message) {
     return res.status(400).json({ message: 'All fields are required' });
   }
@@ -41,7 +47,6 @@ router.post('/mail', async (req, res) => {
     Email: ${email}
     Message: ${message}
     has been sent to me successfully. I will get back to you as soon as possible with my personal mail.`
-
   };
 
   try {
@@ -53,5 +58,6 @@ router.post('/mail', async (req, res) => {
     res.status(500).json({ message: 'Error sending email', error });
   }
 });
+
 
 module.exports = router;

@@ -8,17 +8,27 @@ const ContactPage = () => {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  
+  // Honeypot state (should remain empty if it's a human user)
+  const [honey, setHoney] = useState('');
 
   const submitForm = async (e) => {
     e.preventDefault();
-    
+
+    // If the honeypot field is filled, it's likely a bot
+    if (honey) {
+      alert('Bot detected!');
+      return;
+    }
+
     try {
       // Send a POST request to the backend using Axios
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/contact/mail`, {
-        name,    // these values will be taken from your form's state
+        name,    // values from your form's state
         email,
         subject,
         message,
+        honey   // honeypot field, should be empty
       });
   
       // If the request is successful
@@ -28,6 +38,7 @@ const ContactPage = () => {
         setEmail('');
         setSubject('');
         setMessage('');
+        setHoney(''); // Reset the honeypot field
       }
     } catch (error) {
       // Handle error
@@ -45,6 +56,7 @@ const ContactPage = () => {
       <div>
         <h3 className={styles.heading}>Or Fill Out This Form</h3>
         <form className={styles.form} onSubmit={submitForm}>
+        
           <div className={styles.flex}>
             <div>
               <label htmlFor="name">Name</label>
@@ -70,7 +82,7 @@ const ContactPage = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="name">Subject</label>
+            <label htmlFor="subject">Subject</label>
             <input
               type="text"
               name="subject"
@@ -91,6 +103,19 @@ const ContactPage = () => {
               required
             ></textarea>
           </div>
+          
+          {/* Honeypot field - hidden input */}
+          <div style={{ display: 'none' }}>
+            <label htmlFor="honey">Do not fill this field</label>
+            <input
+              type="text"
+              name="honey"
+              id="honey"
+              value={honey}
+              onChange={(e) => setHoney(e.target.value)} // honeypot state
+            />
+          </div>
+          
           <button type="submit">Submit</button>
         </form>
       </div>

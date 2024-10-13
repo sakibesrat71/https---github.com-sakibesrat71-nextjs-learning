@@ -18,7 +18,7 @@ const contactItems = [
     href: 'https://www.linkedin.com/in/esrat-sakib-79a2a01a3/',
   },
   {
-    social: 'twitter',
+    social: 'x',
     link: '@esratsakib',
     href: 'https://x.com/EsratSakib',
   },
