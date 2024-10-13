@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const contactRoutes = require('./routes/contactRoutes');
 const auth = require('./routes/authenticator');
+const home = require('./routes/homeRoutes');
 const cors = require('cors'); 
 const connectDb = require('./utils/connectDb');
 
@@ -16,6 +17,7 @@ app.use(cors());
 // Use contact route
 app.use('/api/contact', contactRoutes);
 app.use('/api/auth', auth);
+app.use('/api/home', home);
 
 const PORT = process.env.PORT || 5000;
 connectDb();
