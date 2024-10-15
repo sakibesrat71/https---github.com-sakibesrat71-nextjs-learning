@@ -5,6 +5,7 @@ const Me = require('../models/me'); // Import the Mongoose model
 // Get the latest created object
 router.get('/get-myself', async (req, res) => {
   try {
+    console.log('Fetching latest data...');
     const latestMe = await Me.findOne().sort({ createdAt: -1 }); // Sort by createdAt in descending order
     if (latestMe) {
       res.status(200).json(latestMe);
