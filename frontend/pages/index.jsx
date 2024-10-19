@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Illustration from '../components/Illustration';
 import styles from '../styles/HomePage.module.css';
 import axios from 'axios';
+import TerminalComponent from '../components/TerminalComponent'; // Import the terminal component
 
 export default function HomePage() {
   const [data, setData] = useState(null);
@@ -17,9 +18,10 @@ export default function HomePage() {
 
       if (storedData) {
         setData(JSON.parse(storedData));
+        console.log('Data fetched from session storage');
       } else {
         try {
-          const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/me/latest`);
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/home/get-myself`);
           const fetchedData = response.data;
           sessionStorage.setItem('meData', JSON.stringify(fetchedData));
           setData(fetchedData);
@@ -88,6 +90,9 @@ export default function HomePage() {
           </div>
           <Illustration className={styles.illustration} />
         </div>
+      </div>
+      <div className={styles.terminalContainer}>
+        <TerminalComponent />
       </div>
     </>
   );
